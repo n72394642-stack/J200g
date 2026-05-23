@@ -1,0 +1,25 @@
+name: Build Kernel
+on: [push]
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v3
+
+      - name: Setup Toolchain
+        run: sudo apt-get update && sudo apt-get install gcc-arm-linux-gnueabi
+
+      - name: Build Kernel
+        run: |
+          export ARCH=arm
+          export CROSS_COMPILE=arm-linux-gnueabi-
+          make j2lte_defconfig
+          make -j$(nproc)
+
+      - name: Upload zImage
+        uses: actions/upload-artifact@v3
+        with:
+          name: zImage
+          path: arch/arm/boot/zImage
+          
