@@ -10,12 +10,15 @@ jobs:
       - name: Setup Toolchain
         run: sudo apt-get update && sudo apt-get install gcc-arm-linux-gnueabi
 
-      - name: Build Kernel
+            - name: Build Kernel
         run: |
           export ARCH=arm
           export CROSS_COMPILE=arm-linux-gnueabi-
+          # CCACHE disable kar rahe hain taaki error na aaye
+          export USE_CCACHE=0
           make j2lte_defconfig
           make -j$(nproc)
+          
 
       - name: Upload zImage
         uses: actions/upload-artifact@v4
